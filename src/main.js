@@ -44,9 +44,12 @@ const appEl = document.getElementById('app');
 
 // Task engine must be imported to register itself with scheduler
 // (side effect: calls setStartTask in scheduler.js)
-import('./task-engine.js').then(() => {
+import('./task-engine.js').then(async ({ start }) => {
+  // If opened from a push notification ("?wf_fire=<id>"), start that alarm's task.
+  const firedFromPush = _consumeFireParam(start);
+
   // Check for an alarm that fired while the app was closed
-  const resumed = checkOnOpenAlarmResume();
+  const resumed = firedFromPush || checkOnOpenAlarmResume();
 
   // Start the foreground alarm scheduler now that task-engine is registered
   startScheduler();
@@ -62,4 +65,39 @@ import('./task-engine.js').then(() => {
 
   // Initialize router (sets up hashchange listener)
   initRouter(appEl);
+
+  // ── Web Push: keep the backend schedule in sync ────────────
+  import('./push.js').then(({ syncAlarms }) => {
+    // Re-sync on load (covers schedules created on another device/session)
+    syncAlarms();
+    // Re-sync whenever alarms change (debounced)
+    let t = null;
+    window.addEventListener('wf:alarms-updated', () => {
+      clearTimeout(t);
+      t = setTimeout(() => syncAlarms(), 400);
+    });
+  });
 });
+
+/**
+ * If the app was opened via a push notification, start that alarm's task.
+ * Reads & clears the "wf_fire" query param.
+ * @returns {boolean} true if a task was started
+ */
+function _consumeFireParam(start) {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('wf_fire');
+  if (!id) return false;
+
+  // Clean the URL so a refresh doesn't re-trigger.
+  params.delete('wf_fire');
+  const qs = params.toString();
+  const clean = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash;
+  window.history.replaceState({}, '', clean);
+
+  import('./state-store.js').then(({ getAlarms }) => {
+    const alarm = getAlarms().find((a) => a.id === id);
+    start(alarm?.taskTypePreference || null, null, id);
+  });
+  return true;
+}

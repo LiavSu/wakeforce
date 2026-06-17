@@ -1,6 +1,6 @@
 // WakeForce Service Worker
 
-const CACHE_NAME = 'wakeforce-v1';
+const CACHE_NAME = 'wakeforce-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -41,6 +41,59 @@ self.addEventListener('activate', (event) => {
             c.postMessage({ type: 'SW_ACTIVATED' })
           );
         });
+      })
+  );
+});
+
+// ── Push ──────────────────────────────────────────────────────
+// Fired by the server (via Web Push) at alarm time — wakes the SW even when
+// the app is closed, shows a lock-screen notification with sound + vibration.
+self.addEventListener('push', (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (_) {
+    data = {};
+  }
+
+  const title = data.title || '⏰ WakeForce Alarm';
+  const options = {
+    body: data.body || 'Alarm! Tap to open and complete your task to turn it off.',
+    tag: 'wakeforce-alarm',
+    renotify: true,
+    requireInteraction: true,
+    silent: false,
+    vibrate: [500, 200, 500, 200, 500, 200, 500],
+    icon: '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
+    data: { url: data.url || '/', alarmId: data.alarmId || null },
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// ── Notification click ────────────────────────────────────────
+// Opens / focuses the app at the alarm route so the task overlay starts.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = new URL(
+    (event.notification.data && event.notification.data.url) || '/',
+    self.location.origin
+  ).href;
+
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if ('focus' in client) {
+            if ('navigate' in client) {
+              return client.navigate(target).then((c) => (c || client).focus());
+            }
+            return client.focus();
+          }
+        }
+        if (self.clients.openWindow) return self.clients.openWindow(target);
       })
   );
 });

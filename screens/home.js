@@ -10,6 +10,7 @@ import {
   getNextAlarm,
   formatCountdown,
 } from '../src/schedule-format.js';
+import { pushSupported, isIOS, isStandalone, permission, enablePush } from '../src/push.js';
 
 let container = null;
 let cleanupFns = [];
@@ -40,6 +41,11 @@ export function mount(el) {
   // Scrollable body
   const body = document.createElement('div');
   body.className = 'home__body';
+
+  // Background-alarm (Web Push) banner
+  const pushSlot = document.createElement('div');
+  body.appendChild(pushSlot);
+  _renderPushBanner(pushSlot);
 
   const hero = document.createElement('div');
   hero.className = 'next-hero';
@@ -100,6 +106,59 @@ function _buildHeader() {
 
   header.appendChild(wordmark);
   return header;
+}
+
+// ── Background-alarm (Web Push) banner ───────────────────────
+
+function _renderPushBanner(slot) {
+  slot.innerHTML = '';
+  if (!pushSupported() || permission() === 'granted') return;
+
+  const banner = document.createElement('div');
+  banner.className = 'push-banner';
+
+  // iOS requires the PWA to be installed to the Home Screen before push works.
+  if (isIOS() && !isStandalone()) {
+    banner.innerHTML =
+      `<div class="push-banner__icon">${_bellIcon()}</div>` +
+      '<div class="push-banner__body">' +
+      '<div class="push-banner__title">Ring while locked</div>' +
+      '<div class="push-banner__text">Add WakeForce to your Home Screen (Share → Add to Home Screen), then reopen it to enable background alarms.</div>' +
+      '</div>';
+    slot.appendChild(banner);
+    return;
+  }
+
+  banner.innerHTML =
+    `<div class="push-banner__icon">${_bellIcon()}</div>` +
+    '<div class="push-banner__body">' +
+    '<div class="push-banner__title">Ring while locked</div>' +
+    '<div class="push-banner__text">Turn on background alarms so WakeForce can wake you even when the app is closed.</div>' +
+    '</div>';
+
+  const btn = document.createElement('button');
+  btn.className = 'push-banner__btn';
+  btn.textContent = 'Enable';
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    btn.textContent = 'Enabling…';
+    const res = await enablePush();
+    if (res.ok) {
+      slot.innerHTML = '';
+    } else if (res.reason === 'denied') {
+      btn.disabled = false;
+      btn.textContent = 'Enable';
+      banner.querySelector('.push-banner__text').textContent =
+        'Notifications are blocked. Allow them for this site in your browser settings, then try again.';
+    } else if (res.reason === 'ios-install') {
+      _renderPushBanner(slot);
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Try again';
+    }
+  });
+  banner.appendChild(btn);
+  slot.appendChild(banner);
 }
 
 // ── Next-alarm hero ──────────────────────────────────────────

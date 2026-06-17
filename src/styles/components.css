@@ -246,6 +246,60 @@
 .add-alarm-btn { gap: var(--space-2); }
 .add-alarm-btn svg { stroke-width: 2.6; }
 
+/* ---- PUSH / BACKGROUND-ALARM BANNER ---- */
+.push-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-2) 0 var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-1-dim);
+  border: 1px solid rgba(255, 106, 61, 0.35);
+}
+.push-banner__icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--gradient-sunrise);
+  color: #fff;
+  box-shadow: var(--glow-accent-1);
+}
+.push-banner__body { flex: 1; min-width: 0; }
+.push-banner__title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+.push-banner__text {
+  margin-top: 2px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+}
+.push-banner__btn {
+  flex-shrink: 0;
+  align-self: stretch;
+  padding: 0 var(--space-5);
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--gradient-sunrise);
+  color: var(--color-text-on-accent);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  box-shadow: var(--glow-btn);
+  transition: transform var(--duration-fast) var(--ease-default);
+  -webkit-tap-highlight-color: transparent;
+}
+.push-banner__btn:active { transform: scale(0.95); }
+.push-banner__btn:disabled { opacity: 0.6; }
+
 /* ---- NEXT-ALARM HERO ---- */
 .next-hero {
   position: relative;
