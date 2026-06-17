@@ -1,0 +1,10 @@
+# Agent long-term memory logs — local state, not source
+.opencode/memory/
+
+node_modules/
+dist/
+.vercel
+.env
+.env.local
+.DS_Store
+*.log

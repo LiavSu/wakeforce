@@ -1,0 +1,30 @@
+const fs = require('fs');
+const path = require('path');
+
+// Minimal 1x1 PNG, color #0a0a0a (RGBA: 10,10,10,255)
+// This is a valid PNG binary: header + IHDR + IDAT + IEND
+function createMinimalPNG() {
+  // Use a real PNG generator approach - create a simple colored square
+  // Since we can't use canvas in Node without extra deps, create the smallest valid PNG
+  const PNG_1x1_BLACK = Buffer.from([
+    0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, // PNG signature
+    0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52, // IHDR chunk length + type
+    0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, // width=1, height=1
+    0x08, 0x02, 0x00, 0x00, 0x00, 0x90, 0x77, 0x53, // bit depth=8, color=RGB, ...
+    0xDE, 0x00, 0x00, 0x00, 0x0C, 0x49, 0x44, 0x41, // IDAT chunk
+    0x54, 0x08, 0xD7, 0x63, 0x60, 0x60, 0x60, 0x00, // compressed pixel data
+    0x00, 0x00, 0x04, 0x00, 0x01, 0xE2, 0x21, 0xBC, //
+    0x33, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, // IEND
+    0x44, 0xAE, 0x42, 0x60, 0x82
+  ]);
+  return PNG_1x1_BLACK;
+}
+
+const iconsDir = path.join(__dirname, '..', 'public', 'icons');
+if (!fs.existsSync(iconsDir)) fs.mkdirSync(iconsDir, { recursive: true });
+
+const files = ['icon-192.png', 'icon-512.png', 'icon-512-maskable.png'];
+files.forEach(f => {
+  fs.writeFileSync(path.join(iconsDir, f), createMinimalPNG());
+  console.log('Created:', f);
+});
