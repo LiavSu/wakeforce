@@ -86,11 +86,13 @@ export function formatCountdown(at, from = new Date()) {
 /**
  * Convert a 24h "HH:MM" string into 12h parts.
  * @param {string} time
+ * @param {boolean} pad — zero-pad the hour and use lowercase am/pm
  * @returns {{ time: string, period: string }}
  */
-export function formatTime12(time) {
+export function formatTime12(time, pad = false) {
   const [h, m] = time.split(':').map(Number);
-  const period = h >= 12 ? 'PM' : 'AM';
+  const period = h >= 12 ? (pad ? 'pm' : 'PM') : (pad ? 'am' : 'AM');
   const h12 = h % 12 || 12;
-  return { time: `${h12}:${String(m).padStart(2, '0')}`, period };
+  const hh = pad ? String(h12).padStart(2, '0') : String(h12);
+  return { time: `${hh}:${String(m).padStart(2, '0')}`, period };
 }

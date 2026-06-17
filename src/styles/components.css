@@ -34,6 +34,20 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.app-header--home .app-header__title {
+  position: relative;
+  font-size: 1.5rem;
+}
+.app-header--home .app-header__title::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  bottom: -5px;
+  width: 30px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--gradient-sunrise);
+}
 
 .app-header__actions {
   display: flex;
@@ -222,8 +236,15 @@
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: var(--space-2) var(--space-4) calc(env(safe-area-inset-bottom) + 120px);
+  padding: var(--space-2) var(--space-4) var(--space-4);
 }
+.home__footer {
+  padding: var(--space-3) var(--space-4);
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--space-3));
+  background: linear-gradient(180deg, rgba(25, 15, 28, 0) 0%, rgba(25, 15, 28, 0.55) 100%);
+}
+.add-alarm-btn { gap: var(--space-2); }
+.add-alarm-btn svg { stroke-width: 2.6; }
 
 /* ---- NEXT-ALARM HERO ---- */
 .next-hero {
@@ -339,8 +360,8 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  padding: var(--space-5) var(--space-5);
-  background: rgba(34, 30, 64, 0.94);
+  padding: var(--space-4) var(--space-5);
+  background: rgba(48, 31, 44, 0.92);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   backdrop-filter: blur(10px);
@@ -350,21 +371,40 @@
   cursor: pointer;
 }
 .alarm-card.is-swiped .alarm-card__surface { transform: translateX(-100px); }
-.alarm-card__surface:active { background: rgba(42, 38, 78, 0.96); }
+.alarm-card__surface:active { background: rgba(58, 38, 52, 0.96); }
+
+.alarm-card__icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--gradient-sunrise);
+  color: #fff;
+  box-shadow: var(--glow-accent-1);
+}
+.alarm-card--off .alarm-card__icon {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--color-text-secondary);
+  box-shadow: none;
+}
 
 .alarm-card__main { flex: 1; min-width: 0; transition: opacity var(--duration-fast) var(--ease-default); }
 .alarm-card__time {
-  font-size: 2.6rem;
+  font-size: 2.1rem;
   font-weight: var(--font-weight-black);
   line-height: 1;
   letter-spacing: var(--letter-spacing-tight);
   color: var(--color-text-primary);
 }
 .alarm-card__period {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: var(--font-weight-bold);
   margin-left: var(--space-1);
   color: var(--color-text-secondary);
+  text-transform: lowercase;
 }
 .alarm-card__meta {
   margin-top: var(--space-2);

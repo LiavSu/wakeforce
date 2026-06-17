@@ -1,57 +1,60 @@
 /* WakeForce Design Tokens v3 — Sunrise / Dawn theme */
 :root {
-  /* BACKGROUNDS — deep indigo night fading toward dawn */
-  --color-bg:             #14122b;
-  --color-bg-alt:         #1b1839;
-  --gradient-bg:          linear-gradient(180deg, #100f24 0%, #16142f 38%, #221c44 72%, #33255a 100%);
+  /* BACKGROUNDS — warm plum night with an orange ambient glow */
+  --color-bg:             #1b1220;
+  --color-bg-alt:         #251830;
+  --gradient-bg:
+    radial-gradient(120% 75% at 85% -8%, rgba(255, 110, 55, 0.26) 0%, transparent 55%),
+    radial-gradient(110% 70% at 5% 108%, rgba(255, 90, 60, 0.16) 0%, transparent 55%),
+    linear-gradient(168deg, #2c1730 0%, #241327 48%, #190f1c 100%);
 
-  /* SURFACES — soft glassy cards over the night sky */
+  /* SURFACES — soft warm-plum cards */
   --color-surface:        rgba(255, 255, 255, 0.055);
-  --color-surface-solid:  #211d42;
+  --color-surface-solid:  #2a1c34;
   --color-surface-raised: rgba(255, 255, 255, 0.09);
   --color-border:         rgba(255, 255, 255, 0.10);
   --color-border-strong:  rgba(255, 255, 255, 0.18);
 
-  /* ACCENTS — sunrise: coral → amber → gold */
-  --color-accent-1:       #FF8E6E;  /* coral (primary) */
-  --color-accent-1-light: #FFB199;
-  --color-accent-1-dim:   rgba(255, 142, 110, 0.16);
+  /* ACCENTS — vibrant orange → amber → gold */
+  --color-accent-1:       #FF6A3D;  /* vivid orange (primary) */
+  --color-accent-1-light: #FF8A5C;
+  --color-accent-1-dim:   rgba(255, 106, 61, 0.16);
 
-  --color-accent-2:       #FFB36B;  /* amber */
-  --color-accent-2-light: #FFCB95;
-  --color-accent-2-dim:   rgba(255, 179, 107, 0.16);
+  --color-accent-2:       #FF8A3D;  /* amber-orange */
+  --color-accent-2-light: #FFAE6B;
+  --color-accent-2-dim:   rgba(255, 138, 61, 0.16);
 
-  --color-accent-3:       #FFD36E;  /* gold */
-  --color-accent-3-dark:  #e6b54e;
-  --color-accent-3-dim:   rgba(255, 211, 110, 0.16);
+  --color-accent-3:       #FFC24B;  /* gold */
+  --color-accent-3-dark:  #e6a52e;
+  --color-accent-3-dim:   rgba(255, 194, 75, 0.16);
 
   --color-accent:         var(--color-accent-1);
 
-  --gradient-sunrise:     linear-gradient(135deg, #FF7E5F 0%, #FFA86B 50%, #FFD36E 100%);
-  --gradient-dawn:        linear-gradient(165deg, #3a2b66 0%, #6b3f6e 45%, #c96f63 78%, #f0a45f 100%);
+  --gradient-sunrise:     linear-gradient(135deg, #FF8A45 0%, #FF5E33 100%);
+  --gradient-dawn:        linear-gradient(150deg, #3a2350 0%, #6e3a5a 38%, #c45a3c 76%, #ff8a45 100%);
 
   /* TEXT */
-  --color-text-primary:   #F7F4FF;
-  --color-text-secondary: #A8A2CC;
-  --color-text-tertiary:  #6f6a93;
-  --color-text-on-accent: #3a1c08;
+  --color-text-primary:   #FBF2F4;
+  --color-text-secondary: #B79EB4;
+  --color-text-tertiary:  #7c6477;
+  --color-text-on-accent: #3a1404;
 
   /* SEMANTIC */
   --color-danger:         #FF5C5C;
   --color-danger-dim:     rgba(255, 92, 92, 0.20);
-  --color-success:        #5BE6A8;
-  --color-success-bg:     #0e2a21;
+  --color-success:        #4FE0A0;
+  --color-success-bg:     #16261f;
 
   /* GLOWS */
-  --glow-accent-1:  0 0 18px rgba(255, 142, 110, 0.45), 0 0 44px rgba(255, 142, 110, 0.20);
-  --glow-accent-2:  0 0 18px rgba(255, 179, 107, 0.45), 0 0 44px rgba(255, 179, 107, 0.20);
-  --glow-accent-3:  0 0 18px rgba(255, 211, 110, 0.50), 0 0 44px rgba(255, 211, 110, 0.22);
-  --glow-btn:       0 10px 30px rgba(255, 126, 95, 0.38);
-  --glow-sun:       0 0 60px rgba(255, 178, 96, 0.55), 0 0 120px rgba(255, 140, 90, 0.30);
+  --glow-accent-1:  0 0 18px rgba(255, 106, 61, 0.45), 0 0 44px rgba(255, 106, 61, 0.22);
+  --glow-accent-2:  0 0 18px rgba(255, 138, 61, 0.45), 0 0 44px rgba(255, 138, 61, 0.22);
+  --glow-accent-3:  0 0 18px rgba(255, 194, 75, 0.50), 0 0 44px rgba(255, 194, 75, 0.22);
+  --glow-btn:       0 10px 30px rgba(255, 106, 61, 0.42);
+  --glow-sun:       0 0 60px rgba(255, 150, 80, 0.55), 0 0 120px rgba(255, 110, 60, 0.30);
 
   /* SHADOWS */
-  --shadow-card:    0 6px 24px rgba(0, 0, 0, 0.28);
-  --shadow-fab:     0 12px 28px rgba(255, 126, 95, 0.40), 0 4px 10px rgba(0, 0, 0, 0.30);
+  --shadow-card:    0 6px 24px rgba(0, 0, 0, 0.32);
+  --shadow-fab:     0 12px 28px rgba(255, 106, 61, 0.42), 0 4px 10px rgba(0, 0, 0, 0.32);
 
   /* TYPOGRAPHY */
   --font-family:          'Inter', system-ui, -apple-system, sans-serif;

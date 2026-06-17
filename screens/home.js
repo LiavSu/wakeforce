@@ -51,16 +51,18 @@ export function mount(el) {
 
   screen.appendChild(body);
 
-  // Floating add button
-  const fab = document.createElement('button');
-  fab.className = 'fab';
-  fab.setAttribute('aria-label', 'Add alarm');
-  fab.innerHTML = _plusIcon();
-  fab.addEventListener('click', () => {
+  // Full-width add button (sticky footer)
+  const footer = document.createElement('div');
+  footer.className = 'home__footer';
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn-primary btn-primary--full add-alarm-btn';
+  addBtn.innerHTML = `<span>Add New Alarm</span>${_plusIcon()}`;
+  addBtn.addEventListener('click', () => {
     unlockAudio();
     navigate('/alarm/new');
   });
-  screen.appendChild(fab);
+  footer.appendChild(addBtn);
+  screen.appendChild(footer);
 
   container.appendChild(screen);
 
@@ -174,10 +176,16 @@ function _buildAlarmCard(alarm, listEl) {
   const surface = document.createElement('div');
   surface.className = 'alarm-card__surface';
 
+  // Bell icon badge
+  const icon = document.createElement('div');
+  icon.className = 'alarm-card__icon';
+  icon.innerHTML = alarm.enabled ? _bellIcon() : _bellOffIcon();
+  surface.appendChild(icon);
+
   const main = document.createElement('div');
   main.className = 'alarm-card__main';
 
-  const { time, period } = formatTime12(alarm.time);
+  const { time, period } = formatTime12(alarm.time, true);
   const timeEl = document.createElement('div');
   timeEl.className = 'alarm-card__time';
   timeEl.innerHTML = `${time}<span class="alarm-card__period">${period}</span>`;
@@ -194,6 +202,7 @@ function _buildAlarmCard(alarm, listEl) {
 
   const toggle = _buildToggle(alarm.enabled, (checked) => {
     card.classList.toggle('alarm-card--off', !checked);
+    icon.innerHTML = checked ? _bellIcon() : _bellOffIcon();
     updateAlarm(alarm.id, { enabled: checked });
     window.dispatchEvent(new CustomEvent('wf:alarms-updated'));
   });
@@ -306,7 +315,15 @@ function _esc(s) {
 }
 
 function _plusIcon() {
-  return '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+  return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+}
+
+function _bellIcon() {
+  return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>';
+}
+
+function _bellOffIcon() {
+  return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.7 21a2 2 0 0 1-3.4 0"/><path d="M18.6 13A7.5 7.5 0 0 0 18 8M6 8a6 6 0 0 1 9-5.2M3 3l18 18M3 17s3-2 3-9"/></svg>';
 }
 
 function _trashIcon() {
